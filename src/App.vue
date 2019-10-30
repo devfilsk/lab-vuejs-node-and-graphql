@@ -18,7 +18,12 @@
                     </li>
                   </ul>
                   <br>
-                  <input type="text" class="form-control" placeholder="Digite o Prefixo">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Digite o Prefixo" v-model="prefix" v-on:keyup.enter="addPrefix(prefix)">  
+                    <div class="input-group-append">
+                      <button class="btn btn-info" v-on:click="addPrefix(prefix)"><span class="fa fa-plus"></span></button>
+                    </div>                  
+                  </div>
                 </div>
             </div>
           </div>
@@ -32,7 +37,12 @@
                     </li>
                   </ul>
                   <br>
-                  <input type="text" class="form-control" placeholder="Digite o Sufixos">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Digite o Sufixos" v-model="sufix" v-on:keyup.enter="addSufix(sufix)">
+                    <div class="input-group-append">
+                      <button class="btn btn-info" v-on:click="addSufix(sufix)"><span class="fa fa-plus"></span></button>
+                    </div>                  
+                  </div>
                 </div>
             </div>
           </div>
@@ -42,7 +52,17 @@
         <div class="card">
           <div class="card-body">
             <ul class="list-group">
-              <li class="list-group-item" v-for="domain in domains" v-bind:key="domain">{{ domain }}</li>
+              <li class="list-group-item" v-for="domain in domains" v-bind:key="domain">
+                <div class="row">
+                  <div class="col-md">
+                    {{ domain }} 
+                  </div>
+                  <div class="col-md">
+                    <button class="btn btn-">
+                      <span class="fa fa-shopping-cart"></span></button>
+                  </div>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
@@ -60,11 +80,40 @@ export default {
 	name: "app",
 	data: function(){
 		return {
+			prefix: "",
+			sufix: "",
 			prefixes: ["Air", "Jet", "Flight"],
 			sufixes: ["Hub", "Station", "Mart"],
-			domains: ["Airhub", "AirStation", "AirMart", "JetHub", "JetStation", "JetMart", "FlightHub", "FlightStation", "FlightMart"]
 		};
-	}
+	},
+	methods: {
+		addPrefix(prefix) {
+			this.prefixes.push(prefix);
+			this.prefix = "";
+		},
+		addSufix(sufix){
+			this.sufixes.push(sufix);
+			this.sufix = "";
+		},
+		deleteSufix(sufix){
+			this.sufixes.splice(this.sufixes.indexOf(sufix), 1);
+		},
+	},
+	computed: {
+		domains(){
+			const domains = [];
+			for(const prefix of this.prefixes){
+				for(const sufix of this.sufixes){
+					domains.push(prefix + sufix);
+				}
+			}
+			return domains;
+		}
+	},
+	// metodo chamado assim que o elemento é criado
+	// created() {
+	// 	this.domains = this.generate();
+	// }
 };
 </script>
 
